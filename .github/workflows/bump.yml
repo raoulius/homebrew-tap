@@ -1,0 +1,25 @@
+# Points the cask at the newest MouseSnap release. Runs every 6 hours;
+# trigger it right after a release with: gh workflow run bump.yml -R raoulius/homebrew-tap
+name: Bump MouseSnap
+on:
+  schedule: [{ cron: "0 */6 * * *" }]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh release view -R raoulius/mousesnap --json tagName -q .tagName)
+          version=${tag#v}
+          grep -q "version \"$version\"" Casks/mousesnap.rb && exit 0
+          curl -fsSL -o MouseSnap.zip "https://github.com/raoulius/mousesnap/releases/download/$tag/MouseSnap.zip"
+          sha=$(sha256sum MouseSnap.zip | cut -d' ' -f1)
+          sed -i -e "s/^  version \".*\"/  version \"$version\"/" -e "s/^  sha256 \".*\"/  sha256 \"$sha\"/" Casks/mousesnap.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "mousesnap $version" && git push
