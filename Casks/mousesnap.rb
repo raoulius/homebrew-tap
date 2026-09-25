@@ -1,6 +1,6 @@
 cask "mousesnap" do
-  version "1.3.0"
-  sha256 "674f7533a7df882cf1764dceaced0be403a1c0e8ed9b1a2ab9e27b54149aab4d"
+  version "1.4.0"
+  sha256 "0529b5a88429454feb56665f203ea03546164b0326dbec40af6f783d17b803f3"
 
   url "https://github.com/raoulius/mousesnap/releases/download/v#{version}/MouseSnap.zip"
   name "MouseSnap"
