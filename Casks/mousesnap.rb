@@ -12,14 +12,9 @@ cask "mousesnap" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "MouseSnap.app"
-
-  # Not notarized: drop the quarantine flag so macOS doesn't block the first launch.
-  postflight do
-    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{appdir}/MouseSnap.app"]
-  end
 
   uninstall quit: "local.mousesnap"
 
