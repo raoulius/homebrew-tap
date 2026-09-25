@@ -16,6 +16,14 @@ cask "mousesnap" do
 
   app "MouseSnap.app"
 
+  # Not notarized: clear the quarantine flag so Gatekeeper doesn't block launch.
+  postflight_steps do
+    run "/usr/bin/xattr",
+        args:           ["-dr", "com.apple.quarantine", "{{appdir}}/MouseSnap.app"],
+        writable_paths: ["MouseSnap.app"],
+        writable_base:  :appdir
+  end
+
   uninstall quit: "local.mousesnap"
 
   zap trash: "~/Library/Preferences/local.mousesnap.plist"
